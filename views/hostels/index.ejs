@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Hostels | HostelHub</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-900">
+  <header class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <a href="/hostels" class="flex items-center gap-3">
+        <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-700 text-lg font-bold text-white">H</span>
+        <span class="text-xl font-bold">HostelHub</span>
+      </a>
+
+      <div class="flex items-center gap-4">
+        <a href="/bookings" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-700 hover:text-blue-700">
+          My Bookings
+        </a>
+        <span class="text-sm font-medium text-slate-600">Hi, <%= user.firstName %></span>
+        <form action="/auth/logout" method="POST">
+          <button type="submit" class="rounded-md bg-red-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-600">
+            Logout
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <section class="mb-8">
+      <p class="text-sm font-semibold uppercase tracking-widest text-blue-700">Student Index</p>
+      <h1 class="mt-2 text-3xl font-bold text-slate-950">Listed Hostels</h1>
+      <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+        Browse hostel listings added by owners and compare price, rooms, facilities, and contact details.
+      </p>
+    </section>
+
+    <form action="/hostels" method="GET" class="mb-8 flex flex-wrap items-end justify-between gap-3 rounded-lg bg-white p-3 shadow-sm ring-1 ring-slate-200">
+      <div class="w-44">
+        <label for="city" class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-600">City</label>
+        <input
+          id="city"
+          name="city"
+          value="<%= filters.city || '' %>"
+          placeholder="Search city"
+          class="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+        >
+      </div>
+
+    <div class="w-32">
+      <label for="street" class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        Area / Street
+      </label>
+
+      <input
+        id="street"
+        name="street"
+        value="<%= filters.street || '' %>"
+        placeholder="Lalpur, Harmu, Mesra..."
+        class="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+      >
+    </div>      
+
+    <div class="w-36">
+      <label for="hostelType"
+        class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        Hostel Type
+      </label>
+
+      <select
+        id="hostelType"
+        name="hostelType"
+        class="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+        <option value="">All</option>
+
+        <option value="Boys"
+          <%= filters.hostelType === "Boys" ? "selected" : "" %>>
+          Boys
+        </option>
+
+        <option value="Girls"
+          <%= filters.hostelType === "Girls" ? "selected" : "" %>>
+          Girls
+        </option>
+
+        <option value="Co-ed"
+          <%= filters.hostelType === "Co-ed" ? "selected" : "" %>>
+          Co-ed
+        </option>
+      </select>
+    </div>   
+    
+    <div class="w-40">
+      <label for="sharingType"
+        class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-600">
+        Sharing Type
+      </label>
+
+      <select
+        id="sharingType"
+        name="sharingType"
+        class="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+        <option value="">All</option>
+
+        <option value="Single Sharing"
+          <%= filters.sharingType === "Single Sharing" ? "selected" : "" %>>
+          Single Sharing
+        </option>
+
+        <option value="2 Sharing"
+          <%= filters.sharingType === "2 Sharing" ? "selected" : "" %>>
+          2 Sharing
+        </option>
+
+        <option value="3 Sharing"
+          <%= filters.sharingType === "3 Sharing" ? "selected" : "" %>>
+          3 Sharing
+        </option>
+
+        <option value="4 Sharing"
+          <%= filters.sharingType === "4 Sharing" ? "selected" : "" %>>
+          4 Sharing
+        </option>
+      </select>
+    </div>    
+
+      <div class="w-32">
+        <label for="maxPrice" class="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-600">Max Price</label>
+        <input
+          id="maxPrice"
+          name="maxPrice"
+          type="number"
+          min="1"
+          value="<%= filters.maxPrice || '' %>"
+          placeholder="Price per month"
+          class="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+        >
+      </div>
+
+      <button type="submit" class="h-9 self-end rounded-md bg-blue-700 px-4 text-sm font-bold text-white transition hover:bg-blue-800">
+        Search
+      </button>
+
+      <a href="/hostels" class="inline-flex h-9 items-center justify-center self-end rounded-md border border-slate-300 bg-white px-4 text-sm font-bold text-slate-700 transition hover:border-blue-700 hover:text-blue-700">
+        Clear
+      </a>
+    </form>
+    <% if (resultCount !== null) { %>
+      <div class="mb-4 rounded-md bg-blue-50 px-4 py-2">
+        <p class="text-sm font-medium text-blue-700">
+          Found <%= resultCount %> hostel(s) matching your filters
+        </p>
+      </div>
+    <% } %>
+
+    <% if (errorMessage) { %>
+      <div class="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <%= errorMessage %>
+      </div>
+    <% } %>
+
+    <% if (!hostels || hostels.length === 0) { %>
+      <section class="rounded-lg border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+        <h2 class="text-xl font-bold text-slate-950">
+          <%= filters.city || filters.maxPrice ? 'No hostels match your search' : 'No hostels available yet' %>
+        </h2>
+        <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-slate-600">
+          <%= filters.city || filters.maxPrice ? 'Try changing the city or price filter.' : 'Please check again later. New hostel listings will appear here after owners add them.' %>
+        </p>
+      </section>
+    <% } else { %>
+      <section class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <% hostels.forEach((hostel) => { %>
+          <article class="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+            <img
+              src="<%= hostel.photoUrl %>"
+              alt="<%= hostel.name %>"
+              class="h-56 w-full object-cover"
+            >
+
+            <div class="p-5">
+              <div class="flex items-center justify-between gap-3">
+                <h2 class="text-xl font-bold text-slate-950"><%= hostel.name %></h2>
+                <span class="rounded bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">
+                  <%= hostel.rating || '4.8' %>
+                </span>
+              </div>
+
+              <p class="mt-4 font-bold text-slate-950">
+                Rs. <%= hostel.price %>
+                <span class="text-sm font-normal text-slate-500">/ month</span>
+              </p>
+
+              <div class="mt-5 flex flex-wrap gap-3">
+                <a href="/hostels/details/<%= hostel._id %>" class="inline-flex h-10 items-center justify-center rounded-md bg-blue-700 px-4 text-sm font-bold text-white transition hover:bg-blue-800">
+                  View Details
+                </a>
+                <% if (hostel.isBookedByCurrentUser) { %>
+                  <a href="/bookings" class="inline-flex h-10 items-center justify-center rounded-md border border-emerald-600 bg-emerald-50 px-4 text-sm font-bold text-emerald-700 transition hover:bg-emerald-100">
+                    Booked
+                  </a>
+                <% } else { %>
+                  <a href="/hostels/details/<%= hostel._id %>" class="inline-flex h-10 items-center justify-center rounded-md border border-blue-700 bg-white px-4 text-sm font-bold text-blue-700 transition hover:bg-blue-50">
+                    Book Now
+                  </a>
+                <% } %>
+              </div>
+            </div>
+          </article>
+        <% }) %>
+      </section>
+    <% } %>
+  </main>
+</body>
+</html>
+

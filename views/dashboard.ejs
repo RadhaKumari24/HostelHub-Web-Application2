@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-blue-700 text-white p-6">
+      <h2 class="text-2xl font-bold mb-8">HostelHub</h2>
+
+      <nav class="space-y-4">
+        <a href="/dashboard" class="block hover:bg-blue-600 p-2 rounded">Dashboard</a>
+
+        <% if (user.userType === "owner") { %>
+          <a href="/host/add" class="block hover:bg-blue-600 p-2 rounded">Add Hostel</a>
+          <a href="/host/list" class="block hover:bg-blue-600 p-2 rounded">My Hostels</a>
+          <a href="/host/bookings" class="block hover:bg-blue-600 p-2 rounded">Your Bookings</a>
+        <% } else { %>
+          <a href="/hostels" class="block hover:bg-blue-600 p-2 rounded">Browse Hostels</a>
+        <% } %>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+
+      <!-- Top Bar -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold">Dashboard</h1>
+
+        <div class="flex items-center gap-4">
+          <span class="text-gray-700">
+            👤 <%= user.firstName %>
+          </span>
+
+          <form action="/auth/logout" method="POST">
+            <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+              Logout
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Welcome Card -->
+      <div class="bg-white p-6 rounded-xl shadow mb-6">
+        <h2 class="text-xl font-bold mb-2">
+          Welcome back, <%= user.firstName %> 👋
+        </h2>
+        <p class="text-gray-600">
+          You are logged in as 
+          <span class="font-semibold text-blue-600">
+            <%= user.userType %>
+          </span>
+        </p>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="bg-white p-6 rounded-xl shadow">
+          <h3 class="text-gray-500">Total Hostels</h3>
+          <p class="text-2xl font-bold mt-2"><%= (stats && stats.totalHostels) || 0 %></p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow">
+          <h3 class="text-gray-500">Total Rooms (All)</h3>
+          <p class="text-2xl font-bold mt-2"><%= (stats && stats.totalRooms) || 0 %></p>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow">
+          <h3 class="text-gray-500">Available Rooms (All)</h3>
+          <p class="text-2xl font-bold mt-2"><%= (stats && stats.availableRooms) || 0 %></p>
+        </div>
+
+      </div>
+
+      <!-- Rooms by Type -->
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <% const types = ['Girls','Boys','Co-ed']; %>
+        <% types.forEach(function(t){ const block = (stats && stats.byType && stats.byType[t]) || { total:0, available:0 }; %>
+          <div class="bg-white p-6 rounded-xl shadow">
+            <h3 class="text-gray-500"><%= t %> Rooms</h3>
+            <p class="text-2xl font-bold mt-2">Available: <%= block.available %></p>
+            <p class="text-sm text-gray-400">Total: <%= block.total %></p>
+            <!-- <p class="text-sm text-gray-400">Single: <%= block.single %></p>
+            <p class="text-sm text-gray-400">2 Sharing: <%= block.total %></p>
+            <p class="text-sm text-gray-400">3 Sharing: <%= block.total %></p> -->
+          </div>
+        <% }) %>
+      </div>
+
+      <!-- Bookings List -->
+      <div class="mt-8">
+        <h2 class="text-lg font-semibold mb-4">Recent Bookings</h2>
+        <div class="grid gap-4">
+          <% if (bookings && bookings.length > 0) { %>
+            <% bookings.forEach(function(b) { %>
+              <div class="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+                <div>
+                  <div class="font-semibold"><%= b.studentEmail %></div>
+                  <div class="text-sm text-gray-500"><%= b.hostelId && b.hostelId.name ? b.hostelId.name : 'Unknown Hostel' %></div>
+                </div>
+                <div class="text-right">
+                  <div class="font-medium">Rs. <%= b.amount %></div>
+                  <div class="text-sm text-gray-600">Status: <%= b.bookingStatus %> / <%= b.paymentStatus %></div>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="bg-white p-4 rounded-lg shadow text-gray-600">No bookings yet.</div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Action Section -->
+      <div class="mt-8">
+
+        <% if (user && user.userType === "owner") { %>
+
+          <div class="bg-green-100 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold mb-2">Owner Actions</h3>
+            <p class="mb-4">Manage your hostel listings</p>
+
+            <a href="/host/add" 
+               class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+              Add New Hostel
+            </a>
+          </div>
+
+        <% } else { %>
+
+          <div class="bg-blue-100 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold mb-2">Student Actions</h3>
+            <p class="mb-4">Find your perfect hostel</p>
+
+            <a href="/hostels" 
+               class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+              Browse Hostels
+            </a>
+          </div>
+
+        <% } %>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
+

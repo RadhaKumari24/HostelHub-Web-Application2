@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Bookings | HostelHub</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-900">
+  <div class="flex min-h-screen">
+    <aside class="hidden w-64 bg-blue-700 p-6 text-white md:block">
+      <h2 class="mb-8 text-2xl font-bold">HostelHub</h2>
+
+      <nav class="space-y-3">
+        <a href="/dashboard" class="block rounded-md p-2 hover:bg-blue-600">Dashboard</a>
+        <a href="/host/add" class="block rounded-md p-2 hover:bg-blue-600">Add Hostel</a>
+        <a href="/host/list" class="block rounded-md p-2 hover:bg-blue-600">My Hostels</a>
+        <a href="/host/bookings" class="block rounded-md bg-blue-800 p-2 font-semibold">Your Bookings</a>
+      </nav>
+    </aside>
+
+    <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+      <div class="mb-7 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-widest text-blue-700">Owner Bookings</p>
+          <h1 class="mt-2 text-3xl font-bold text-slate-950">Your Bookings</h1>
+          <p class="mt-2 text-sm text-slate-600">Students who booked hostels from your listings appear here.</p>
+        </div>
+
+        <a href="/host/list" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-blue-700 hover:text-blue-700">
+          My Hostels
+        </a>
+      </div>
+
+      <% if (errorMessage) { %>
+        <div class="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          <%= errorMessage %>
+        </div>
+      <% } %>
+
+      <% if (!bookings || bookings.length === 0) { %>
+        <section class="rounded-lg border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+          <h2 class="text-xl font-bold text-slate-950">No bookings yet</h2>
+          <p class="mx-auto mt-3 max-w-md text-sm leading-6 text-slate-600">
+            When a student books one of your hostels, their booking and contact details will be shown here.
+          </p>
+          <a href="/host/add" class="mt-6 inline-flex rounded-md bg-blue-700 px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-800">
+            Add Hostel
+          </a>
+        </section>
+      <% } else { %>
+        <section class="grid gap-5 xl:grid-cols-2">
+          <% bookings.forEach((booking) => { %>
+            <% const hostel = booking.hostel; %>
+            <% const student = booking.student; %>
+            <article class="overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+              <div class="grid sm:grid-cols-[190px_1fr]">
+                <% if (hostel && hostel.photoUrl) { %>
+                  <img src="<%= hostel.photoUrl %>" alt="<%= hostel.name %>" class="h-52 w-full object-cover sm:h-full">
+                <% } else { %>
+                  <div class="flex h-52 items-center justify-center bg-slate-200 text-sm font-semibold text-slate-500 sm:h-full">
+                    Hostel unavailable
+                  </div>
+                <% } %>
+
+                <div class="p-5">
+                  <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <h2 class="text-xl font-bold text-slate-950"><%= hostel ? hostel.name : 'Deleted hostel' %></h2>
+                      <% if (hostel) { %>
+                        <p class="mt-1 text-sm text-slate-600"><%= hostel.location %>, <%= hostel.city %></p>
+                      <% } %>
+                    </div>
+
+                    <span class="rounded-md bg-emerald-100 px-3 py-1 text-xs font-bold uppercase text-emerald-700">
+                      <%= booking.status %>
+                    </span>
+                  </div>
+
+                  <div class="mt-5 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+                    <div class="rounded-md bg-slate-50 p-3">
+                      <p class="text-slate-500">Student</p>
+                      <p class="mt-1 font-bold text-slate-950">
+                        <%= student ? `${student.firstName || ''} ${student.lastName || ''}`.trim() || student.email : 'Student unavailable' %>
+                      </p>
+                    </div>
+
+                    <div class="rounded-md bg-slate-50 p-3">
+                      <p class="text-slate-500">Student Email</p>
+                      <p class="mt-1 break-words font-bold text-slate-950"><%= student ? student.email : 'Not available' %></p>
+                    </div>
+
+                    <div class="rounded-md bg-slate-50 p-3">
+                      <p class="text-slate-500">Student Contact</p>
+                      <p class="mt-1 font-bold text-slate-950"><%= booking.contactNumber %></p>
+                    </div>
+
+                    <div class="rounded-md bg-slate-50 p-3">
+                      <p class="text-slate-500">Move-in Date</p>
+                      <p class="mt-1 font-bold text-slate-950">
+                        <%= booking.moveInDate ? booking.moveInDate.toISOString().slice(0, 10) : 'Not set' %>
+                      </p>
+                    </div>
+
+                    <div class="rounded-md bg-slate-50 p-3">
+                      <p class="text-slate-500">Amount</p>
+                      <p class="mt-1 font-bold text-slate-950">Rs. <%= booking.amount || 0 %></p>
+                    </div>
+
+                    <div class="rounded-md bg-slate-50 p-3">
+                      <p class="text-slate-500">Payment</p>
+                      <p class="mt-1 font-bold text-slate-950"><%= booking.paymentStatus || 'Pending' %></p>
+                    </div>
+                  </div>
+
+                  <% if (booking.note) { %>
+                    <p class="mt-4 rounded-md bg-slate-50 p-3 text-sm leading-6 text-slate-600"><%= booking.note %></p>
+                  <% } %>
+
+                  <div class="mt-5 flex flex-wrap gap-3 border-t border-slate-200 pt-4">
+                    <% if (hostel) { %>
+                      <a href="/host/details/<%= hostel._id %>" class="inline-flex h-10 items-center justify-center rounded-md bg-blue-700 px-4 text-sm font-bold text-white transition hover:bg-blue-800">
+                        View Hostel
+                      </a>
+                    <% } %>
+                    <span class="inline-flex h-10 items-center rounded-md border border-slate-200 px-4 text-sm font-semibold text-slate-600">
+                      Booked on <%= booking.createdAt ? booking.createdAt.toISOString().slice(0, 10) : 'N/A' %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          <% }) %>
+        </section>
+      <% } %>
+    </main>
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Hostel | HostelHub</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-900">
+  <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+      <a href="/dashboard" class="flex items-center gap-3">
+        <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-700 text-lg font-bold text-white">H</span>
+        <span class="text-xl font-bold">HostelHub</span>
+      </a>
+
+      <a href="/dashboard" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-700 hover:text-blue-700">
+        Back to Dashboard
+      </a>
+    </div>
+
+    <section class="grid overflow-hidden rounded-lg bg-white shadow-sm lg:grid-cols-[0.82fr_1.18fr]">
+      <div class="relative min-h-72 bg-slate-950">
+        <img
+          src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1200&q=80"
+          alt="Hostel common room"
+          class="absolute inset-0 h-full w-full object-cover opacity-55"
+        >
+        <div class="absolute inset-0 bg-slate-950/55"></div>
+        <div class="relative flex h-full flex-col justify-end p-8 text-white">
+          <p class="text-sm font-semibold uppercase tracking-widest text-cyan-200">Owner listing</p>
+          <h1 class="mt-3 text-4xl font-bold leading-tight">Add a new hostel</h1>
+          <p class="mt-4 max-w-md text-sm leading-6 text-slate-100">
+            Keep the details clear so students can compare rooms, pricing, and facilities quickly.
+          </p>
+        </div>
+      </div>
+
+      <div class="p-5 sm:p-8">
+        <% if (errors && errors.length > 0) { %>
+          <div class="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+            <%= errors[0] %>
+          </div>
+        <% } %>
+
+        <form action="/host/add" method="POST" enctype="multipart/form-data" class="space-y-7">
+          <div class="grid gap-5 md:grid-cols-2">
+            <div>
+              <label for="name" class="mb-2 block text-sm font-semibold text-slate-700">Hostel Name</label>
+              <input id="name" name="name" value="<%= oldInput.name || '' %>" required class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+            </div>
+
+            <div>
+              <label for="hostelType" class="mb-2 block text-sm font-semibold text-slate-700">Hostel Type</label>
+              <select id="hostelType" name="hostelType" required class="h-12 w-full rounded-md border border-slate-300 bg-white px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+                <option value="">Select type</option>
+                <% hostelTypes.forEach((type) => { %>
+                  <option value="<%= type %>" <%= oldInput.hostelType === type ? 'selected' : '' %>><%= type %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div>
+              <label for="location" class="mb-2 block text-sm font-semibold text-slate-700">Location / Address</label>
+              <input id="location" name="location" value="<%= oldInput.location || '' %>" required class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+            </div>
+
+            <div>
+              <label for="city" class="mb-2 block text-sm font-semibold text-slate-700">City</label>
+              <input id="city" name="city" value="<%= oldInput.city || '' %>" required class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+            </div>
+            <div>
+              <label for="street" class="mb-2 block text-sm font-semibold text-slate-700">
+                Area / Street
+              </label>
+
+              <input
+                id="street"
+                name="street"
+                value="<%= oldInput.street || '' %>"
+                placeholder="Lalpur, Harmu, Mesra..."
+                required
+                class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              >
+            </div>
+
+            <div>
+              <label for="price" class="mb-2 block text-sm font-semibold text-slate-700">Price Per Month</label>
+              <input id="price" name="price" type="number" min="1" value="<%= oldInput.price || '' %>" required class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+            </div>
+
+            <div>
+              <label for="sharingType" class="mb-2 block text-sm font-semibold text-slate-700">
+                Sharing Type
+              </label>
+
+              <select
+                id="sharingType"
+                name="sharingType"
+                required
+                class="h-12 w-full rounded-md border border-slate-300 bg-white px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              >
+                <option value="">Select sharing type</option>
+
+                <% sharingTypes.forEach((type) => { %>
+                  <option value="<%= type %>"
+                    <%= oldInput.sharingType === type ? 'selected' : '' %>>
+                    <%= type %>
+                  </option>
+                <% }) %>
+
+              </select>
+            </div>
+
+            <div>
+              <label for="totalRooms" class="mb-2 block text-sm font-semibold text-slate-700">Total Rooms</label>
+              <input id="totalRooms" name="totalRooms" type="number" min="1" value="<%= oldInput.totalRooms || '' %>" required class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+            </div>
+
+            <div>
+              <label for="availableRooms" class="mb-2 block text-sm font-semibold text-slate-700">Available Rooms</label>
+              <input id="availableRooms" name="availableRooms" type="number" min="0" value="<%= oldInput.availableRooms || '' %>" required class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+            </div>
+
+            <div>
+              <label for="photo" class="mb-2 block text-sm font-semibold text-slate-700">Hostel Photo</label>
+              <input
+                id="photo"
+                name="photo"
+                type="file"
+                accept="image/*"
+                required
+                class="block h-12 w-full rounded-md border border-slate-300 bg-white text-sm text-slate-700 file:mr-4 file:h-full file:border-0 file:bg-blue-700 file:px-4 file:text-sm file:font-semibold file:text-white hover:file:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              >
+            </div>
+
+            <div>
+              <label for="video" class="mb-2 block text-sm font-semibold text-slate-700">
+                Hostel Video Tour (Optional)
+              </label>
+
+              <input
+                id="video"
+                name="video"
+                type="file"
+                accept="video/mp4,video/webm,video/quicktime"
+                class="block h-12 w-full rounded-md border border-slate-300 bg-white text-sm text-slate-700"
+              >
+            </div>
+
+            <div>
+              <label for="contactNumber" class="mb-2 block text-sm font-semibold text-slate-700">Contact Number</label>
+              <input id="contactNumber" name="contactNumber" type="tel" value="<%= oldInput.contactNumber || '' %>" required class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+            </div>
+          </div>
+
+          <div>
+            <label for="description" class="mb-2 block text-sm font-semibold text-slate-700">Description</label>
+            <textarea id="description" name="description" rows="4" required class="w-full rounded-md border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"><%= oldInput.description || '' %></textarea>
+          </div>
+
+          <fieldset>
+            <legend class="mb-3 text-sm font-semibold text-slate-700">Facilities</legend>
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <% facilitiesList.forEach((facility) => { %>
+                <label class="flex h-11 items-center gap-3 rounded-md border border-slate-300 px-3 text-sm font-medium text-slate-700">
+                  <input
+                    type="checkbox"
+                    name="facilities"
+                    value="<%= facility %>"
+                    <%= oldInput.facilities && oldInput.facilities.includes(facility) ? 'checked' : '' %>
+                    class="h-4 w-4 rounded border-slate-300 text-blue-700 focus:ring-blue-600"
+                  >
+                  <span><%= facility %></span>
+                </label>
+              <% }) %>
+            </div>
+          </fieldset>
+
+          <button type="submit" class="flex h-12 w-full items-center justify-center rounded-md bg-blue-700 px-5 text-sm font-bold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:ring-offset-2">
+            Add Hostel
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Booking | HostelHub</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body class="min-h-screen bg-slate-100 text-slate-900">
+  <header class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <a href="/hostels" class="flex items-center gap-3">
+        <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-700 text-lg font-bold text-white">H</span>
+        <span class="text-xl font-bold">HostelHub</span>
+      </a>
+
+      <a href="/hostels/details/<%= hostel._id %>" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-700 hover:text-blue-700">
+        Back to Details
+      </a>
+    </div>
+  </header>
+
+  <main class="mx-auto flex max-w-6xl items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
+    <section class="w-full max-w-3xl overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-slate-200">
+      <img src="<%= hostel.photoUrl %>" alt="<%= hostel.name %>" class="h-64 w-full object-cover">
+
+      <div class="p-5 sm:p-8">
+        <div class="mb-6">
+          <p class="text-sm font-semibold uppercase tracking-widest text-blue-700">Confirm Booking</p>
+          <h1 class="mt-2 text-3xl font-bold text-slate-950"><%= hostel.name %></h1>
+          <p class="mt-2 text-sm text-slate-600"><%= hostel.location %>, <%= hostel.city %></p>
+        </div>
+
+        <% if (errors && errors.length > 0) { %>
+          <div class="mb-5 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+            <%= errors[0] %>
+          </div>
+        <% } %>
+
+        <% if (successMessage) { %>
+          <div class="mb-5 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+            <%= successMessage %>
+          </div>
+        <% } %>
+
+        <div class="mb-7 grid gap-4 sm:grid-cols-3">
+          <div class="rounded-md bg-slate-50 p-4">
+            <p class="text-sm text-slate-500">Price</p>
+            <p class="mt-1 text-lg font-bold text-slate-950">Rs. <%= hostel.price %> / month</p>
+          </div>
+          <div class="rounded-md bg-slate-50 p-4">
+            <p class="text-sm text-slate-500">Rooms Left</p>
+            <p class="mt-1 text-lg font-bold text-slate-950"><%= hostel.availableRooms %></p>
+          </div>
+          <div class="rounded-md bg-slate-50 p-4">
+            <p class="text-sm text-slate-500">Sharing</p>
+            <p class="mt-1 text-lg font-bold text-slate-950"><%= hostel.sharingType %></p>
+          </div>
+        </div>
+
+        <% if (!successMessage) { %>
+          <form action="/bookings/confirm/<%= hostel._id %>" method="POST" class="space-y-5">
+            <div>
+              <label for="contactNumber" class="mb-2 block text-sm font-semibold text-slate-700">Your Contact Number</label>
+              <input
+                id="contactNumber"
+                name="contactNumber"
+                type="tel"
+                maxlength="10"
+                minlength="10"
+                pattern="[6-9]{1}[0-9]{9}"
+                required
+                value="<%= oldInput.contactNumber || '' %>"
+                class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"
+              >
+            </div>
+
+            <div>
+              <label for="moveInDate" class="mb-2 block text-sm font-semibold text-slate-700">Preferred Move-in Date</label>
+              <input id="moveInDate" name="moveInDate" type="date" value="<%= oldInput.moveInDate || '' %>" class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+            </div>
+
+            <div>
+              <label for="note" class="mb-2 block text-sm font-semibold text-slate-700">Note for Owner</label>
+              <textarea id="note" name="note" rows="3" class="w-full rounded-md border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100"><%= oldInput.note || '' %></textarea>
+            </div>
+
+            <button type="submit" class="flex h-12 w-full items-center justify-center rounded-md bg-blue-700 px-5 text-sm font-bold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:ring-offset-2">
+              Proceed to Payment
+            </button>
+          </form>
+        <% } else { %>
+          <div class="flex flex-wrap gap-3">
+            <a href="/bookings" class="inline-flex h-11 items-center justify-center rounded-md bg-blue-700 px-5 text-sm font-bold text-white transition hover:bg-blue-800">
+              View My Bookings
+            </a>
+            <a href="/hostels" class="inline-flex h-11 items-center justify-center rounded-md border border-blue-700 bg-white px-5 text-sm font-bold text-blue-700 transition hover:bg-blue-50">
+              Browse More Hostels
+            </a>
+          </div>
+        <% } %>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+
