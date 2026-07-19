@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <%- include("partials/sidebar") %>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+
+        <h1 class="text-3xl font-bold text-blue-700 mb-6">
+            Students
+        </h1>
+
+        <!-- Search -->
+        <form action="/admin/students" method="GET" class="mb-6">
+
+            <div class="flex">
+
+                <input
+                    type="text"
+                    name="search"
+                    value="<%= search %>"
+                    placeholder="Search by name, email or phone..."
+                    class="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                <button
+                    type="submit"
+                    class="bg-blue-700 hover:bg-blue-800 text-white px-6 rounded-r-lg">
+                    Search
+                </button>
+
+            </div>
+
+        </form>
+
+        <!-- Table -->
+        <div class="bg-white rounded-lg shadow overflow-x-auto">
+
+            <table class="min-w-full">
+
+                <thead class="bg-blue-700 text-white">
+
+                    <tr>
+                        <th class="py-3 px-4 text-left">Name</th>
+                        <th class="py-3 px-4 text-left">Email</th>
+                        <th class="py-3 px-4 text-left">Phone</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <% students.forEach(student => { %>
+
+                    <tr class="border-b hover:bg-gray-50">
+
+                        <td class="py-3 px-4">
+                            <%= student.firstName %> <%= student.lastName %>
+                        </td>
+
+                        <td class="py-3 px-4">
+                            <%= student.email %>
+                        </td>
+
+                        <td class="py-3 px-4">
+                            <%= student.phoneNumber %>
+                        </td>
+
+                    </tr>
+
+                    <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pageTitle %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <%- include("partials/sidebar") %>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-8">
+
+        <h1 class="text-3xl font-bold text-yellow-700 mb-6">
+            Hostels
+        </h1>
+
+        <div class="bg-white rounded-lg shadow overflow-x-auto">
+
+            <table class="min-w-full">
+
+                <thead class="bg-yellow-600 text-white">
+                    <tr>
+                        <th class="py-3 px-4 text-left">Hostel</th>
+                        <th class="py-3 px-4 text-left">Owner</th>
+                        <th class="py-3 px-4 text-left">City</th>
+                        <th class="py-3 px-4 text-left">Price</th>
+                        <th class="py-3 px-4 text-left">Available Rooms</th>
+                        <th class="py-3 px-4 text-left">Rating</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <% hostels.forEach(hostel => { %>
+
+                    <tr class="border-b hover:bg-gray-50">
+
+                        <td class="py-3 px-4">
+                            <%= hostel.name %>
+                        </td>
+
+                        <td class="py-3 px-4">
+                            <%= hostel.ownerEmail %>
+                        </td>
+
+                        <td class="py-3 px-4">
+                            <%= hostel.city %>
+                        </td>
+
+                        <td class="py-3 px-4">
+                            ₹<%= hostel.price %>
+                        </td>
+
+                        <td class="py-3 px-4">
+                            <%= hostel.availableRooms %>
+                        </td>
+
+                        <td class="py-3 px-4">
+                            ⭐ <%= hostel.rating %>
+                        </td>
+
+                    </tr>
+
+                    <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -11,6 +11,7 @@ const connectDB = require("./config/db");
 const User = require("./models/user");
 const Hostel = require("./models/hostel");
 
+
 const attachOwners = async (hostels) => {
   const ownerEmails = [...new Set(hostels.map((hostel) => hostel.ownerEmail).filter(Boolean))];
   const owners = await User.find({ email: { $in: ownerEmails } }, "firstName lastName email").lean();
@@ -28,6 +29,7 @@ const dashboardRoutes = require("./routes/dashboard");
 const hostRoutes = require("./routes/host");
 const hostelsRoutes = require("./routes/hostels");
 const bookingRoutes = require("./routes/bookings");
+const adminRoutes = require("./routes/admin");
 
 const app = express();
 
@@ -104,6 +106,7 @@ app.use("/host", hostRoutes);
 app.use("/hostels", hostelsRoutes);
 app.use("/bookings", bookingRoutes);
 app.use("/booking", bookingRoutes);
+app.use("/admin", adminRoutes);
 
 // ================= HOME =================
 app.get("/", async (req, res) => {
