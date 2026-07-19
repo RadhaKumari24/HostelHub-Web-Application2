@@ -69,17 +69,17 @@ app.use(flash());
 
 // ================= USER ATTACH MIDDLEWARE =================
 app.use(async (req, res, next) => {
-  console.log("SESSION USER ID:", req.session.userId);
+  // console.log("SESSION USER ID:", req.session.userId);
 
   if (!req.session.userId) {
-    console.log("NO USER ID");           // 🔥
+    // console.log("NO USER ID");           // 🔥
     res.locals.isLoggedIn = false;
     return next();
   }
 
   try {
     const user = await User.findById(req.session.userId);
-    console.log("FOUND USER:", user);    // 🔥
+    // console.log("FOUND USER:", user);    // 🔥
 
     if (!user) {
       res.locals.isLoggedIn = false;
@@ -92,7 +92,7 @@ app.use(async (req, res, next) => {
 
     next();
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     next();
   }
 });
@@ -146,7 +146,7 @@ const startServer = (port, attemptsLeft = MAX_PORT_ATTEMPTS) => {
 
   server.listen(port, () => {
     process.env.PORT = String(port);
-    console.log(`Server running on http://localhost:${port}`);
+    console.log(`Server running on port ${port}`);
   });
 };
 

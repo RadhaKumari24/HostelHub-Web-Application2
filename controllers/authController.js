@@ -36,6 +36,7 @@ const sendVerificationOtpEmail = async (user, otp) => {
   });
 };
 
+
 const issueEmailVerificationOtp = async (user) => {
   const otp = createOtp();
   user.emailVerificationToken = hashValue(otp);
@@ -70,17 +71,34 @@ exports.getSignup = (req, res) => {
 };
 
 exports.postSignup = async (req, res) => {
+  console.log("Req body:", req.body);
+  console.log("Phone number:", req.body.phoneNumber);
   try {
     const firstName = (req.body.firstName || "").trim();
     const lastName = (req.body.lastName || "").trim();
+    const phoneNumber = (req.body.phoneNumber || "").trim();
     const email = (req.body.email || "").trim().toLowerCase();
     const password = req.body.password || "";
     const userType = req.body.userType === "owner" ? "owner" : "student";
 
-    if (!firstName || !lastName || !email || !password) {
+    if (!firstName || !lastName || !phoneNumber || !email || !password) {
       return res.status(422).render("auth/signup", {
         errors: ["Please fill in all required fields."],
-        oldInput: { firstName, lastName, email, userType }
+        oldInput: { firstName, lastName, phoneNumber, email, userType }
+      });
+    }
+    if (!/^[6-9]\d{9}$/.test(phoneNumber)) {
+      return res.status(422).render("auth/signup", {
+        errors: ["Please enter a valid 10-digit mobile number."],
+        oldInput: { firstName, lastName, phoneNumber, email, userType }
+      });
+    }
+
+    const existingPhone = await User.findOne({ phoneNumber });
+    if (existingPhone) {
+      return res.status(422).render("auth/signup", {
+        errors: ["This mobile number is already registered."],
+        oldInput: { firstName, lastName, phoneNumber, email, userType }
       });
     }
 
@@ -98,20 +116,23 @@ exports.postSignup = async (req, res) => {
 
       return res.status(422).render("auth/signup", {
         errors: ["An account with this email already exists."],
-        oldInput: { firstName, lastName, email, userType }
+        oldInput: { firstName, lastName, phoneNumber, email, userType }
       });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-
+    console.log(req.body);
+    console.log(phoneNumber);
     const user = new User({
       firstName,
       lastName,
+      phoneNumber,
       email,
       password: hashedPassword,
       userType,
       isEmailVerified: false
     });
+    console.log(user);
 
     await issueEmailVerificationOtp(user);
 
@@ -127,6 +148,7 @@ exports.postSignup = async (req, res) => {
       oldInput: {
         firstName: req.body.firstName || "",
         lastName: req.body.lastName || "",
+        phoneNumber: req.body.phoneNumber || "",
         email: req.body.email || "",
         userType: req.body.userType || "student"
       }

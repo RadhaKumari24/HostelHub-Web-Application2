@@ -3,6 +3,13 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
+  phoneNumber: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    match: [/^[6-9]\d{9}$/, "Please enter a valid 10-digit mobile number."]
+  },
   email: {
     type: String,
     required: true,

@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "start": "nodemon app.js",
-    "build:css": "npx tailwindcss -i ./src/styles.css -o ./public/css/styles.css --minify --content \"./views/**/*.ejs\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+ "scripts": {
+  "start": "node app.js",
+  "dev": "nodemon app.js",
+  "build:css": "npx tailwindcss -i ./src/styles.css -o ./public/css/styles.css --minify --content \"./views/**/*.ejs\"",
+  "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",

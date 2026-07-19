@@ -78,7 +78,13 @@
 
             <div>
               <label for="moveInDate" class="mb-2 block text-sm font-semibold text-slate-700">Preferred Move-in Date</label>
-              <input id="moveInDate" name="moveInDate" type="date" value="<%= oldInput.moveInDate || '' %>" class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
+              <input
+                id="moveInDate"
+                name="moveInDate"
+                type="date"
+                value="<%= oldInput.moveInDate || '' %>"
+                min="<%= new Date().toISOString().split('T')[0] %>"
+                class="h-12 w-full rounded-md border border-slate-300 px-4 text-sm outline-none transition focus:border-blue-700 focus:ring-2 focus:ring-blue-100">
             </div>
 
             <div>

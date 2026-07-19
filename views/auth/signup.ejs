@@ -32,6 +32,18 @@
         required
         class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
+        <input
+          type="tel"
+          name="phoneNumber"
+          placeholder="Mobile Number"
+          required
+          maxlength="10"
+          minlength="10"
+          pattern="[6-9][0-9]{9}"
+          inputmode="numeric"
+          oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
+          class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
       <input 
         name="email"

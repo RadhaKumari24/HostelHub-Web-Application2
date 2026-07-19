@@ -3,6 +3,8 @@ const Booking = require("../models/booking");
 const Hostel = require("../models/hostel");
 const User = require("../models/user");
 const getRazorpayInstance = require("../config/razorpay");
+const { sendBookingConfirmationEmail } = require("../utils/bookingMail");
+const { sendOwnerBookingNotification } = require("../utils/ownerMail");
 
 const toDisplayBooking = (booking) => ({
   ...booking,
@@ -249,6 +251,25 @@ exports.postVerifyPayment = async (req, res) => {
     booking.bookingStatus = "Confirmed";
     booking.paymentStatus = "Paid";
     await booking.save();
+
+    await sendBookingConfirmationEmail({
+      studentEmail: req.user.email,
+      studentName: `${req.user.firstName} ${req.user.lastName}`,
+      hostel,
+      booking
+    });
+
+    const owner = await User.findOne({ email: hostel.ownerEmail });
+
+    await sendOwnerBookingNotification({
+      ownerEmail: owner.email,
+      ownerName: `${owner.firstName} ${owner.lastName}`,
+      studentName: `${req.user.firstName} ${req.user.lastName}`,
+      studentEmail: req.user.email,
+      contactNumber: booking.contactNumber,
+      hostel,
+      booking
+    });
 
     return res.render("bookings/success", {
       booking,

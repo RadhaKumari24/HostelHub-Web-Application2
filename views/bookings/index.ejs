@@ -67,9 +67,12 @@
                     <h2 class="text-xl font-bold text-slate-950"><%= hostel.name %></h2>
                     <p class="mt-1 text-sm text-slate-600"><%= hostel.location %>, <%= hostel.city %></p>
                   </div>
-                  <span class="rounded-md bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
-                    <%= booking.status %>
-                  </span>
+                  <span class="rounded-md px-3 py-1 text-xs font-bold
+                      <%= booking.status === 'Confirmed'
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : 'bg-red-100 text-red-700' %>">
+                        <%= booking.status %>
+                      </span>
                 </div>
 
                 <div class="mt-5 grid grid-cols-2 gap-3 text-sm">
